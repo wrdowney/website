@@ -2,12 +2,11 @@ package main
 
 import (
     "errors"
-    "fmt"
     "io"
     "net/http"
-    "os"
     "log"
     "encoding/xml"
+    "encoding/json"
 )
 
 type Item struct {
@@ -31,47 +30,49 @@ type Rss struct {
     Channel Channel `xml:"channel"`
 }
 
-var rss Rss
+var feed []byte
 
-func getRoot(w http.ResponseWriter, r *http.Request) {
-    fmt.Printf("got / request\n")
-    io.WriteString(w, rss.Channel.Items[0].Content)
-}
-
-func getHello(w http.ResponseWriter, r *http.Request) {
-    fmt.Printf("got /hello request\n")
-    io.WriteString(w, "Hello, HTTP!\n")
+func getFeed(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Access-Control-Allow-Origin", "*")
+    w.Header().Set("Content-Type", "application/json")
+    io.WriteString(w, string(feed))
 }
 
 func main() {
+    // send GET request to my medium RSS feed
     resp, err := http.Get("https://medium.com/@wdowney20/feed")
     if err != nil {
         log.Fatalf("Error Get: %v\n", err)
     }
     defer resp.Body.Close()
 
-    rss = Rss{}
+    rss := Rss{}
 
+    // decode the response from xml format into a Rss structure
     decoder := xml.NewDecoder(resp.Body)
     err = decoder.Decode(&rss)
     if err != nil {
         log.Fatalf("Error Decode: %v\n", err)
-        return
     }
 
     for _, item := range rss.Channel.Items {
         log.Printf("title: %v pub: %v test: %v\n", item.Title, item.PubDate, item.Content)
     }
 
-    http.HandleFunc("/", getRoot)
-    http.HandleFunc("/hello", getHello)
+    // convert from Rss structure to JSON format
+    feed, err = json.Marshal(rss)
+    if err != nil {
+        log.Fatalf("Error JSON: %v\n", err)
+    }
+    log.Println(string(feed))
+
+    http.HandleFunc("/feed", getFeed)
 
     err = http.ListenAndServe(":3333", nil)
 
     if errors.Is(err, http.ErrServerClosed) {
         log.Print("server closed\n")
     } else if err != nil {
-        log.Printf("error starting server: %s\n", err)
-        os.Exit(1)
+        log.Fatalf("error starting server: %s\n", err)
     }
 }
