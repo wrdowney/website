@@ -14,8 +14,11 @@ fetch("http://localhost:3333/feed")
 
             const post = document.createElement("div");
 
-            const title = document.createElement("h3");
+            const title = document.createElement("a");
             title.innerText = item.Title;
+            title.style.font = "1.5rem Courier,serif";
+            title.setAttribute('href', '#');      
+            title.onclick = function(){loadPostDetail(item)};
             post.appendChild(title);
 
             const publishDate = document.createElement("p");
@@ -32,3 +35,41 @@ fetch("http://localhost:3333/feed")
         console.log(data);
     })
     .catch((error) => console.error("Fetch error: ", error));
+
+const loadPostDetail = (item) => {
+    const posts = document.getElementById("posts");
+    posts.innerHTML = "";
+
+    // update dir path at top of page
+    const dir = document.getElementById("dir")
+    dir.innerHTML = "<a href='index.html'>Home</a> > <a href='posts.html'>Posts</a> >";
+    const postLink = document.createElement("a");
+    postLink.innerText = item.Title;
+    postLink.setAttribute('href', '#');
+    postLink.onclick = function(){loadPostDetail(item)};
+    dir.appendChild(postLink);
+
+    const backLink = document.createElement("a");
+    backLink.innerText = "< Back to list";
+    backLink.setAttribute('href', 'posts.html');
+    posts.appendChild(backLink);
+
+    const title = document.createElement("h2");
+    title.innerText = item.Title;
+    posts.appendChild(title);
+
+    const byLine = document.createElement("p");
+    byLine.innerText = "Written " + item.PubDate + " by " + item.Creator;
+    posts.appendChild(byLine);
+
+    const sourceLink = document.createElement("a");
+    sourceLink.innerText = "View Original";
+    sourceLink.setAttribute('href', item.Link);
+    posts.appendChild(sourceLink);
+
+    const content = document.createElement("div");
+    content.innerHTML = item.Content;
+    posts.appendChild(content);
+
+    console.log("run");
+};
