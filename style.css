@@ -1,0 +1,76 @@
+body {
+  font-family: 'Courier New', Courier, monospace;
+  height: 100vh;
+
+}
+
+.content {
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  padding: 10px;
+}
+
+.intro {
+  margin-top: 3rem;
+}
+
+.socials {
+  margin-top: 2rem;
+  display: inline-block;
+  display: flex;
+}
+
+.socials > a {
+  max-width: 1.5rem;
+  max-height: 1.5rem;
+  margin-right: 0.75rem;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 0;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: 2rem;
+}
+
+p {
+  margin-top: 0.25rem;
+}
+
+a{
+ font-size: 0.75rem;
+ flex: 1;
+}
+
+a:link {
+  text-decoration: underline;
+  color: black;
+}
+
+a:visited {
+  text-decoration: none;
+  color: black;
+}
+
+a:hover {
+  text-decoration: underline;
+  transform: scale(1.25);
+  font-size: scale(1.25);
+}
+
+a:active {
+  text-decoration: underline;
+  color: black;
+}
+
+footer {
+  font-size: 0.8rem;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
