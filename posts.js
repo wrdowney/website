@@ -42,17 +42,12 @@ const loadPostDetail = (item) => {
 
     // update dir path at top of page
     const dir = document.getElementById("dir")
-    dir.innerHTML = "<a href='index.html'>Home</a> > <a href='posts.html'>Posts</a> >";
-    const postLink = document.createElement("a");
-    postLink.innerText = item.Title;
-    postLink.setAttribute('href', '#');
-    postLink.onclick = function(){loadPostDetail(item)};
-    dir.appendChild(postLink);
+    dir.innerHTML = "";
 
     const backLink = document.createElement("a");
     backLink.innerText = "< Back to list";
     backLink.setAttribute('href', 'posts.html');
-    posts.appendChild(backLink);
+    dir.appendChild(backLink);
 
     const title = document.createElement("h2");
     title.innerText = item.Title;
